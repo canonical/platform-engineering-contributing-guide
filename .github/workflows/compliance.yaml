@@ -1,0 +1,65 @@
+# Reusable workflow running Platform Engineering validators on the caller's repository.
+#
+# Usage:
+#
+#   jobs:
+#     compliance:
+#       uses: canonical/platform-engineering-contributing-guide/.github/workflows/compliance.yaml@v1
+#       with:
+#         ref: v1                          # keep in sync with the @ref above
+#         validators: '["check-todos"]'
+#         paths: "src tests"
+name: Compliance
+
+on:
+  workflow_call:
+    inputs:
+      validators:
+        description: JSON array of validator names (directories under validators/)
+        type: string
+        default: '["check-todos"]'
+      paths:
+        description: Space-separated files or directories to check
+        type: string
+        default: "."
+      ref:
+        description: >-
+          Git ref of platform-engineering-contributing-guide to run validators from.
+          Set it to the same ref used in `uses:` (reusable workflows cannot detect it).
+        type: string
+        default: main
+      runs-on:
+        description: Runner label
+        type: string
+        default: ubuntu-latest
+      python-version:
+        description: Python version used to run the validators
+        type: string
+        default: "3.12"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: ${{ matrix.validator }}
+    runs-on: ${{ inputs.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        validator: ${{ fromJSON(inputs.validators) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ inputs.python-version }}
+      - name: Run ${{ matrix.validator }}
+        env:
+          VALIDATOR: ${{ matrix.validator }}
+          REF: ${{ inputs.ref }}
+          INPUT_PATHS: ${{ inputs.paths }}
+          REPO: https://github.com/canonical/platform-engineering-contributing-guide
+        run: |
+          # shellcheck disable=SC2086 # paths are intentionally word-split
+          uvx --from "git+${REPO}@${REF}#subdirectory=validators/${VALIDATOR}" \
+            "${VALIDATOR}" --format github $INPUT_PATHS

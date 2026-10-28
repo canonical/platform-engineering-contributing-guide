@@ -1,0 +1,143 @@
+# Catalog of Platform Engineering practices.
+#
+# Each practice has a stable ID: PFE-<AREA>-<NNN>. IDs are never reused or renumbered;
+# retire a practice with `status: retired` instead of deleting it.
+#
+# Fields:
+#   id:          stable identifier, referenced by skills and validators
+#   title:       short human readable name
+#   area:        one of the keys under `areas`
+#   doc:         path to the documentation source (moves to docs/ with Read the Docs)
+#   status:      active | draft | retired (default: active)
+#   skills:      paths to skills/<name> supporting the practice
+#   validators:  paths to validators/<name> checking the practice
+#
+# Checked by tools/check_catalog.py.
+
+areas:
+  DEF: Definitions
+  PRIN: Principles
+  GH: Workflows
+  IMPL: Implementation
+  TEST: Tests
+  CI: Continuous integration
+  PUB: Publication
+
+practices:
+  # Definitions
+  - id: PFE-DEF-001
+    title: Breaking change
+    area: DEF
+    doc: src/definitions/100-breaking-change.md
+  - id: PFE-DEF-002
+    title: Tool
+    area: DEF
+    doc: src/definitions/200-tool.md
+  - id: PFE-DEF-003
+    title: Unit tests
+    area: DEF
+    doc: src/definitions/300-unit-test.md
+  - id: PFE-DEF-004
+    title: Integration tests
+    area: DEF
+    doc: src/definitions/400-integration-test.md
+  - id: PFE-DEF-005
+    title: End to end tests
+    area: DEF
+    doc: src/definitions/500-end-to-end-test.md
+  - id: PFE-DEF-006
+    title: Smoke tests
+    area: DEF
+    doc: src/definitions/600-smoke-test.md
+
+  # Principles
+  - id: PFE-PRIN-001
+    title: Programming languages and frameworks
+    area: PRIN
+    doc: src/principles/100-programming-languages-and-frameworks.md
+  - id: PFE-PRIN-002
+    title: Charm, Ubuntu and Python versions
+    area: PRIN
+    doc: src/principles/200-versions.md
+  - id: PFE-PRIN-003
+    title: Downloading binaries
+    area: PRIN
+    doc: src/principles/300-binaries.md
+
+  # Workflows
+  - id: PFE-GH-001
+    title: Repository setup
+    area: GH
+    doc: src/github/100-repository-setup.md
+  - id: PFE-GH-002
+    title: PR comments and requests for changes
+    area: GH
+    doc: src/github/200-prs.md
+
+  # Implementation
+  - id: PFE-IMPL-001
+    title: Random values
+    area: IMPL
+    doc: src/implementation/100-random-values.md
+  - id: PFE-IMPL-002
+    title: File encoding
+    area: IMPL
+    doc: src/implementation/200-encoding.md
+  - id: PFE-IMPL-003
+    title: Type hints
+    area: IMPL
+    doc: src/implementation/300-typing.md
+  - id: PFE-IMPL-004
+    title: TODOs in source code
+    area: IMPL
+    doc: src/implementation/400-todos.md
+    skills:
+      - skills/pfe-practices
+    validators:
+      - validators/check-todos
+  - id: PFE-IMPL-005
+    title: Function and method ordering
+    area: IMPL
+    doc: src/implementation/500-function-and-method-ordering.md
+  - id: PFE-IMPL-006
+    title: Non compliant code
+    area: IMPL
+    doc: src/implementation/600-non-compliant-code.md
+
+  # Tests
+  - id: PFE-TEST-001
+    title: Test structure
+    area: TEST
+    doc: src/tests/100-structure.md
+  - id: PFE-TEST-002
+    title: Test exception raised
+    area: TEST
+    doc: src/tests/200-exceptions.md
+  - id: PFE-TEST-003
+    title: Test fixtures
+    area: TEST
+    doc: src/tests/300-fixtures.md
+  - id: PFE-TEST-004
+    title: Test coverage
+    area: TEST
+    doc: src/tests/400-coverage.md
+  - id: PFE-TEST-005
+    title: Static code analysis
+    area: TEST
+    doc: src/tests/500-static-code-analysis.md
+
+  # Continuous integration
+  - id: PFE-CI-001
+    title: CI/CD
+    area: CI
+    doc: src/ci/100-CI-CD.md
+  - id: PFE-CI-002
+    title: Failing status checks
+    area: CI
+    doc: src/ci/200-failing-checks.md
+
+  # Publication
+  - id: PFE-PUB-001
+    title: Publishing to a channel
+    area: PUB
+    doc: src/publication/100-publishing.md

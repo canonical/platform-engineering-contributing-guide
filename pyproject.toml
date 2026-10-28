@@ -1,0 +1,59 @@
+# uv workspace root. This project is not published; it only ties the
+# workspace members together for development and CI.
+[project]
+name = "platform-engineering-practices"
+version = "0.0.0"
+description = "Workspace root for Platform Engineering practices, validators and tooling"
+requires-python = ">=3.10"
+dependencies = [
+    "pfe-validators-common",
+    "check-todos",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "types-pyyaml>=6.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/*", "validators/*"]
+exclude = ["validators/_template"]
+
+[tool.uv.sources]
+pfe-validators-common = { workspace = true }
+check-todos = { workspace = true }
+
+[tool.ruff]
+line-length = 99
+target-version = "py310"
+include = ["*.py", "*.pyi", "**/pyproject.toml"]
+src = ["packages/*/src", "validators/*/src", "tools"]
+# scripts/ predates the workspace tooling and is left untouched for now.
+extend-exclude = ["validators/*/tests/fixtures", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "BLE", "UP", "D", "N", "SIM", "RUF"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["D"]
+
+[tool.mypy]
+strict = true
+files = ["packages/*/src", "validators/[!_]*/src", "tools"]
+explicit_package_bases = true
+exclude = ["/tests/fixtures/", "validators/_template/"]
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+testpaths = ["tests", "packages", "validators"]
+norecursedirs = ["fixtures", "_template", ".venv"]

@@ -1,0 +1,19 @@
+name: Catalog
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-catalog:
+    name: Check catalog.yaml
+    runs-on: [self-hosted-linux-amd64-noble-edge]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+      - name: Check catalog references
+        run: uv run --locked tools/check_catalog.py
