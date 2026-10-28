@@ -58,3 +58,10 @@ def test_run_cli_check_error(tmp_path: Path) -> None:
         raise RuntimeError("boom")
 
     assert run_cli("t", "d", boom, [str(tmp_path)]) == 2
+
+
+def test_pathless_finding_renders() -> None:
+    finding = Finding("PFE-X-001", None, "no file")
+    assert render([finding], "text") == "<environment>: error: [PFE-X-001] no file"
+    assert render([finding], "github") == "::error title=PFE-X-001::no file"
+    assert json.loads(render([finding], "json"))[0]["path"] is None

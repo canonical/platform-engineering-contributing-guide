@@ -22,6 +22,7 @@ areas:
   TEST: Tests
   CI: Continuous integration
   PUB: Publication
+  DEV: Development environment
 
 practices:
   # Definitions
@@ -141,3 +142,13 @@ practices:
     title: Publishing to a channel
     area: PUB
     doc: src/publication/100-publishing.md
+
+  # Development environment
+  - id: PFE-DEV-001
+    title: Development environment, opencode
+    area: DEV
+    doc: src/devenv/100-opencode.md
+    skills:
+      - skills/pfe-practices
+    validators:
+      - validators/check-devenv

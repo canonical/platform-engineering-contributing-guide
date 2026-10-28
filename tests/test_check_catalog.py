@@ -78,3 +78,10 @@ def test_detects_problems(repo: Path) -> None:
         "mentions unknown practice ID PFE-IMPL-999",
     ):
         assert expected in errors
+
+
+def test_local_only_validator_needs_no_action(repo: Path) -> None:
+    (repo / "validators" / "v" / "action.yml").unlink()
+    assert "validators/v is missing action.yml" in "\n".join(check_catalog(repo))
+    (repo / "validators" / "v" / "pyproject.toml").write_text("[tool.pfe]\nlocal-only = true\n")
+    assert check_catalog(repo) == []

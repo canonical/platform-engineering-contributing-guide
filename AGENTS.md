@@ -26,6 +26,9 @@ Conventions for humans and agents contributing to this repository. See
   running `uvx --from "${{ github.action_path }}"`), `README.md`, and
   `tests/` with good and bad fixtures.
 * Add a self-test job in `.github/workflows/actions-selftest.yaml`.
+* Validators that inspect a developer machine rather than repository files
+  (for example `check-devenv`) set `[tool.pfe] local-only = true` in their
+  `pyproject.toml`, ship no `action.yml` and are used with `uvx` only.
 
 ## Skills
 

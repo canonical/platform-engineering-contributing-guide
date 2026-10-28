@@ -25,7 +25,7 @@ def _escape_data(value: str) -> str:
 
 
 def _text(finding: Finding) -> str:
-    location = str(finding.path)
+    location = str(finding.path) if finding.path is not None else "<environment>"
     if finding.line is not None:
         location += f":{finding.line}"
         if finding.column is not None:
@@ -34,7 +34,9 @@ def _text(finding: Finding) -> str:
 
 
 def _github(finding: Finding) -> str:
-    props = [f"file={_escape_property(str(finding.path))}"]
+    props = []
+    if finding.path is not None:
+        props.append(f"file={_escape_property(str(finding.path))}")
     if finding.line is not None:
         props.append(f"line={finding.line}")
     if finding.column is not None:

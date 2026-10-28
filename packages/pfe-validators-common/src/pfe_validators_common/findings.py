@@ -21,7 +21,7 @@ class Finding:
 
     Attributes:
         practice: Practice ID from catalog.yaml (e.g. ``PFE-IMPL-004``).
-        path: File the finding relates to.
+        path: File the finding relates to, or None for environment-level findings.
         message: Human readable explanation.
         line: 1-based line number, if applicable.
         column: 1-based column number, if applicable.
@@ -29,7 +29,7 @@ class Finding:
     """
 
     practice: str
-    path: Path
+    path: Path | None
     message: str
     line: int | None = None
     column: int | None = None
@@ -38,6 +38,6 @@ class Finding:
     def to_dict(self) -> dict[str, object]:
         """Return a JSON-serialisable representation."""
         data = asdict(self)
-        data["path"] = str(self.path)
+        data["path"] = str(self.path) if self.path is not None else None
         data["severity"] = self.severity.value
         return data

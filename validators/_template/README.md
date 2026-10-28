@@ -20,5 +20,8 @@ from CI.
    `[tool.uv.sources]`), then run `uv sync`.
 4. Add tests and fixtures under `tests/`, and a self-test job in
    `.github/workflows/actions-selftest.yaml`.
-5. Reference the validator from the practice entry in `catalog.yaml`.
-6. Rewrite this README following [`check-todos`](../check-todos/README.md).
+5. For a validator that checks a developer machine rather than files, add
+   `[tool.pfe]` / `local-only = true` to its `pyproject.toml` and delete
+   `action.yml`.
+6. Reference the validator from the practice entry in `catalog.yaml`.
+7. Rewrite this README following [`check-todos`](../check-todos/README.md).

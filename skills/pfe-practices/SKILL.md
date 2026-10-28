@@ -48,4 +48,8 @@ uvx --from 'git+https://github.com/canonical/platform-engineering-contributing-g
 
 Move each reported TODO to the backlog (e.g. Jira) and remove the comment.
 
+When setting up or troubleshooting a developer machine, run `check-devenv`
+(PFE-DEV-001) the same way to verify the opencode snap version, LSP and
+default model.
+
 [repo]: https://github.com/canonical/platform-engineering-contributing-guide

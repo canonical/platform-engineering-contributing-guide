@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import re
 import sys
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +34,15 @@ def _children(root: Path, directory: str) -> list[Path]:
     if not base.is_dir():
         return []
     return sorted(p for p in base.iterdir() if p.is_dir() and not p.name.startswith((".", "_")))
+
+
+def _is_local_only(validator_dir: Path) -> bool:
+    """Return True if the validator opts out of a GitHub Action (`[tool.pfe] local-only`)."""
+    pyproject = validator_dir / "pyproject.toml"
+    if not pyproject.is_file():
+        return False
+    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    return bool(data.get("tool", {}).get("pfe", {}).get("local-only", False))
 
 
 def _check_practice(root: Path, practice: Any, areas: dict[str, str], errors: list[str]) -> None:
@@ -59,7 +69,10 @@ def _check_practice(root: Path, practice: Any, areas: dict[str, str], errors: li
         if not (root / skill / "SKILL.md").is_file():
             errors.append(f"{pid}: skill not found (no SKILL.md): {skill}")
     for validator in practice.get("validators") or []:
-        for required in ("pyproject.toml", "action.yml", "README.md"):
+        required_files = ["pyproject.toml", "README.md"]
+        if not _is_local_only(root / validator):
+            required_files.append("action.yml")
+        for required in required_files:
             if not (root / validator / required).is_file():
                 errors.append(f"{pid}: validator {validator} is missing {required}")
 
