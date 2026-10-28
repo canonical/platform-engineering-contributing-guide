@@ -1,0 +1,32 @@
+name: Actions self-test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-todos:
+    name: check-todos action
+    runs-on: [self-hosted-linux-amd64-noble-edge]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Passes on compliant code
+        uses: ./validators/check-todos
+        with:
+          paths: validators/check-todos/tests/fixtures/good
+      - name: Fails on non-compliant code
+        id: bad
+        continue-on-error: true
+        uses: ./validators/check-todos
+        with:
+          paths: validators/check-todos/tests/fixtures/bad
+          format: text
+      - name: Assert failure was reported
+        if: steps.bad.outcome != 'failure'
+        run: |
+          echo "check-todos action did not fail on non-compliant fixtures" >&2
+          exit 1

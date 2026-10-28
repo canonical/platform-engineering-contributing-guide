@@ -1,0 +1,34 @@
+name: validator-template
+description: One-line description (PFE-XXX-NNN)
+author: Canonical Platform Engineering
+
+inputs:
+  paths:
+    description: Space-separated files or directories to check
+    required: false
+    default: "."
+  format:
+    description: Output format (github, text or json)
+    required: false
+    default: github
+  python-version:
+    description: Python version used to run the validator
+    required: false
+    default: "3.12"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Run validator-template
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        INPUT_PATHS: ${{ inputs.paths }}
+        INPUT_FORMAT: ${{ inputs.format }}
+      run: |
+        # shellcheck disable=SC2086 # paths are intentionally word-split
+        uvx --from "$ACTION_PATH" validator-template --format "$INPUT_FORMAT" $INPUT_PATHS

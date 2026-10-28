@@ -1,0 +1,64 @@
+name: Validators
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    name: Lint and test
+    runs-on: [self-hosted-linux-amd64-noble-edge]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+      - name: Check lockfile
+        run: uv lock --check
+      - name: Install workspace
+        run: uv sync --locked
+      - name: Ruff lint
+        run: uv run ruff check
+      - name: Ruff format
+        run: uv run ruff format --check
+      - name: Mypy
+        run: uv run mypy
+      - name: Tests
+        run: uv run pytest
+
+  discover:
+    name: Discover validators
+    runs-on: [self-hosted-linux-amd64-noble-edge]
+    outputs:
+      validators: ${{ steps.list.outputs.validators }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: list
+        name: List validators
+        run: |
+          validators=$(find validators -mindepth 1 -maxdepth 1 -type d ! -name '_*' -printf '%f\n' \
+            | sort | jq -R . | jq -cs .)
+          echo "validators=$validators" >> "$GITHUB_OUTPUT"
+
+  uvx-smoke:
+    name: uvx smoke test (${{ matrix.validator }})
+    needs: discover
+    runs-on: [self-hosted-linux-amd64-noble-edge]
+    strategy:
+      fail-fast: false
+      matrix:
+        validator: ${{ fromJSON(needs.discover.outputs.validators) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+      # Installs the validator exactly as consumers do (git URL + subdirectory), which proves
+      # that workspace dependencies such as pfe-validators-common resolve outside the workspace.
+      - name: Run through uvx from git
+        working-directory: ${{ runner.temp }}
+        env:
+          VALIDATOR: ${{ matrix.validator }}
+        run: |
+          uvx --no-cache --from "git+file://${GITHUB_WORKSPACE}#subdirectory=validators/${VALIDATOR}" \
+            "${VALIDATOR}" --help

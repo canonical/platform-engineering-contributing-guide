@@ -1,0 +1,25 @@
+[project]
+name = "check-devenv"
+version = "0.1.0"
+description = "Check the opencode development environment (PFE-DEV-001)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = ["pfe-validators-common"]
+
+[project.scripts]
+check-devenv = "check_devenv.cli:main"
+
+[tool.uv.sources]
+pfe-validators-common = { workspace = true }
+
+[tool.pfe]
+# Checks a developer machine: consumed with uvx only, no GitHub Action.
+local-only = true
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/check_devenv"]

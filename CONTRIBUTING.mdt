@@ -7,6 +7,7 @@
 - [Tests](#tests)
 - [Continuous integration](#continuous-integration)
 - [Publication](#publication)
+- [Development environment](#development-environment)
 
 The
 [Charm development best practices](https://documentation.ubuntu.com/juju/3.6/reference/charm/index.html)
@@ -65,3 +66,7 @@ are incorporated by reference.
 ## Publication
 
 !INCLUDE publication/100-publishing.md
+
+## Development environment
+
+!INCLUDE devenv/100-opencode.md
